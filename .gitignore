@@ -1,0 +1,2 @@
+libs/external/*
+!libs/external/dist
