@@ -50,7 +50,9 @@ function getPosts(string $dir, int $max = 10, string $last = null): array {
         }
         try {
             $ret[] = new post("$dir/$file");
-        } catch(InvalidArgumentException $e) {}
+        } catch(InvalidArgumentException $e) {
+            // Ignore
+        }
     }
 
     return $ret;

@@ -1,4 +1,5 @@
 <?php
+// this library does not prevent double-submissions as it is stateless
 const CSRF_EXPIRY_DEFAULT = 3600; // 1 hour
 function csrf_generate(string $key, string $sessionID, int $timestamp, int $expiry = CSRF_EXPIRY_DEFAULT): string {
     return $timestamp . 'Z' . $expiry . 'Z' . hash_hmac("sha256", $sessionID . $timestamp . $expiry, $key);
