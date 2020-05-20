@@ -1,9 +1,9 @@
 <?php
 require_once('libs/Secrets.php');
 class Config {
-	public $secrets;
+    public $secrets;
 
-	function __construct(string $secretsPath) {
-		$this->secrets = new Secrets($secretsPath);
-	}
+    function __construct(string $secretsPath) {
+        $this->secrets = new Secrets($secretsPath);
+    }
 }

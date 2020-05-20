@@ -4,7 +4,7 @@ class Book {
 
     public $title;
     public $subtitle;
-	public $authors;
+    public $authors;
     public $isbn10;
     public $edition;
     public $publisher;
@@ -124,13 +124,13 @@ class Book {
         return $response;
     }
 
-	public static function fromGoogleBookAPIv1ByISBN(string $isbn, string $key, int $timeout = 4): Book {
+    public static function fromGoogleBookAPIv1ByISBN(string $isbn, string $key, int $timeout = 4): Book {
         $isbn = str_replace(['-', ' '], '', $isbn);
         if(!is_numeric($isbn)) {
             throw new Error("Invalid ISBN [$isbn]");
         }
         return static::fromGoogleBooksAPIv1(static::callGoogleBooksAPIv1('/volumes', ['q' => 'isbn:' . rawurlencode($isbn)], $key, $timeout));
-	}
+    }
 
     public function __toString(): string {
         $authors = join(', ', array_slice($this->authors, 0, 2));
