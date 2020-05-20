@@ -1,1 +1,1 @@
-../../php2static/php/Module.php
+../../php2static/Module.php
