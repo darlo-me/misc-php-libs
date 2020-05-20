@@ -4,6 +4,26 @@ class post {
     public $created;
     public $lastModified;
     public $filename;
+
+    function __construct(string $path) {
+        $file = basename($path);
+        if(!preg_match('/^([0-9]{8})\-(.*)\.[^\.]+$/', $file, $matches)) {
+            throw new InvalidArgumentException("File $file has invalid filename");
+        }
+        $created = DateTimeImmutable::createFromFormat('Ymd', $matches[1]);
+        if($created === FALSE) {
+            throw new InvalidArgumentException("File $file has invalid filename - cannot get date");
+        }
+        $lastModified = filemtime($path);
+        if($lastModified === FALSE) {
+            throw new RuntimeException("Cannot get last modified of $file");
+        }
+
+        $this->created = $created;
+        $this->title = $matches[2];
+        $this->lastModified = new DateTimeImmutable("@$lastModified");
+        $this->filename = $file;
+    }
 }
 /*
  * return an array of post
@@ -28,25 +48,9 @@ function getPosts(string $dir, int $max = 10, string $last = null): array {
         if(count($ret) >= $max) {
             break;
         }
-        $matches = array();
-        if(!preg_match('/^([0-9]{8})\-(.*)\.[^\.]+$/', $file, $matches)) {
-            continue;
-        }
-        $created = DateTimeImmutable::createFromFormat('Ymd', $matches[1]);
-        if($created === FALSE) {
-            throw new Exception("File $file has invalid filename - cannot get date");
-        }
-        $lastModified = filemtime("$dir/$file");
-        if($lastModified === FALSE) {
-            throw new Exception("Cannot get last modified of $file");
-        }
-
-        $post = new post();
-        $post->created = $created;
-        $post->title = $matches[2];
-        $post->lastModified = new DateTimeImmutable("@$lastModified");
-        $post->filename = $file;
-        $ret[] = $post;
+        try {
+            $ret[] = new post("$dir/$file");
+        } catch(InvalidArgumentException $e) {}
     }
 
     return $ret;
